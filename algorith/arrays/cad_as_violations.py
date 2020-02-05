@@ -28,7 +28,7 @@ def down_intervals(starts, ends):
     down = 0
     for i in range(len(starts)):
         while heap.size>0 and starts[i] > heap.peak():
-            endd = heap.pop()
+            heap.pop()
             down-=1
             downs.append(down)
         heap.push(ends[i])
