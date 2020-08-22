@@ -5,7 +5,8 @@ from algorith.arrays.binary_srch import binary_search
 
 def critical_events(ts1,ts2,w):
     """
-    ts1 rains down upon ts2.
+    ts1 rains down upon ts2. The window size can be 
+    positive or negative.
     """
     if len(ts2)==0 or len(ts1)==0:
         return 0
@@ -24,11 +25,23 @@ def critical_events(ts1,ts2,w):
 
 
 def critical_events_v2(ts1,ts2,w):
+    """
+    Designed for when ts1 is much larger than ts2.
+    Leverages binary search to find critical events
+    from ts1 lying within w-window of some event in ts2
+    in O(mlog(n)) time where m=len(ts2), n=len(ts1)
+    params:
+        ts1: The first array, raining down on ts2.
+        ts2: The second array around which we find intervals.
+        w: The window size. Must be positive for this method.
+    """
     critical=0; ix=0; seen_until=-1
     for t in ts2:        
         ix=binary_search(ts1,t,ix,len(ts1)-1)
         seen_until=max(seen_until,ix)
         while ix+1<len(ts1) and t+w>ts1[ix+1]:
+            # The binary search has a propensity to 
+            # go backwards. So, we avoid double counting.
             critical+=(seen_until<(ix+1))
             ix+=1            
             seen_until=max(seen_until,ix)
@@ -43,8 +56,14 @@ def functional_tst():
     print(ev==2)
     ev = critical_events_v2([1.4,2.4,3.4],[1,2,3],.5)
     print(ev==3)
-    ts1=np.array([0.02364078, 0.05228936, 0.3201887 , 0.41696722, 0.50680057,
-        0.58062848, 0.6491584 , 0.76480126, 0.79478828, 0.9453893 ])
+    ev = critical_events([1,2,3],[.5,1.5,2.5],-1)
+    print(ev==3)
+    ev = critical_events([1,2,3],[.5,1.5,2.5],1)
+    print(ev==2)
+    ## From a simulation.
+    ts1=np.array([0.02364078, 0.05228936, 0.3201887 , 
+        0.41696722, 0.50680057, 0.58062848, 0.6491584 , 0.76480126, 
+        0.79478828, 0.9453893 ])
     ts2=np.array([0.24825007, 0.70216959, 0.73216372, 0.89533743, 0.97304893])
     ev=critical_events_v2(ts1,ts2,0.1)
     print(ev==4)
@@ -54,14 +73,14 @@ def scale_tst():
     ts1=np.sort(np.random.uniform(size=500000))
     ts2=np.sort(np.random.uniform(size=100))
     start = time.time()
-    crit = critical_events(ts1,ts2,0.0001)
+    crit1 = critical_events(ts1,ts2,0.0001)
     end = time.time()
-    print(crit)
+    print(crit1)
     print(end - start)
     start = time.time()
-    crit = critical_events_v2(ts1,ts2,0.0001)
+    crit2 = critical_events_v2(ts1,ts2,0.0001)
     end = time.time()
-    print(crit)
+    print(crit2)
     print(end - start)
-
+    print("Functional test result: " + str(crit2==crit1))
 
