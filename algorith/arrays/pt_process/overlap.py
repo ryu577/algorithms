@@ -1,6 +1,6 @@
 import numpy as np
 import time
-from algorith.arrays.binary_srch import binary_search
+from algorith.arrays.binary_srch import binary_search, binary_search_oprns
 
 
 def critical_events(ts1,ts2,w):
@@ -82,6 +82,46 @@ def critical_events_v2_pos_w(ts1,ts2,w):
     return critical
 
 
+def critical_events_v3_pos_w(ts1,ts2,w):
+    eta=0; start=-1; end=len(ts1)-1
+    for t in ts2:
+        i1 = binary_search(ts1,t,max(0,start),end)
+        i1=max(i1,start)
+        i2 = binary_search(ts1,t+w,max(0,i1),end)
+        i2=max(i2,start)
+        eta+=(i2-i1)
+        start=max(start,i2)
+        if start>=len(ts1)-1:
+            return eta
+    return eta
+
+
+
+def critical_events_v3_pos_w_oprns(ts1,ts2,w,oprns=[0]):
+    eta=0; start=-1; end=len(ts1)-1
+    for t in ts2:
+        i1 = binary_search_oprns(ts1,t,max(0,start),end,oprns=oprns)
+        i1=max(i1,start)
+        oprns[0]+=1
+        i2 = binary_search_oprns(ts1,t+w,max(0,i1),end,oprns=oprns)
+        i2=max(i2,start)
+        eta+=(i2-i1)
+        start=max(start,i2)
+        oprns[0]+=3
+        if start>=len(ts1)-1:
+            oprns[0]+=1
+            return eta
+    return eta
+
+
+def critical_events_v3(ts1,ts2,w):
+    if w>0:
+        return critical_events_v3_pos_w(ts1,ts2,w)
+    else:
+        ## TODO: Implement v3 version for negative w.
+        return critical_events_v2_neg_w(ts1,ts2,w)
+
+
 def functional_tst():
     ## Test cases.
     ev = critical_events_v2([.5,1.5,2.5],[1,2,3],.5)
@@ -93,7 +133,7 @@ def functional_tst():
     ev = critical_events([1,2,3],[.5,1.5,2.5],-1)
     print(ev==3)
     ev = critical_events([1,2,3],[.5,1.5,2.5],1)
-    print(ev==2)
+    print(ev==3)
     ## From a simulation.
     ts1=np.array([0.02364078, 0.05228936, 0.3201887 , 
         0.41696722, 0.50680057, 0.58062848, 0.6491584 , 0.76480126, 
@@ -119,4 +159,6 @@ def scale_tst():
     print(crit2)
     print(end - start)
     print("Functional test result: " + str(crit2==crit1))
+
+
 
