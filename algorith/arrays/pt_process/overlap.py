@@ -122,9 +122,33 @@ def critical_events_v3(ts1,ts2,w):
         return critical_events_v2_neg_w(ts1,ts2,w)
 
 
+def critical_events_v4_pos_w(ts1,ts2,w):
+    st1=-1; st2=0
+    eta=0
+    while (st1<len(ts1)-1) and (st2<len(ts2)):
+        i1 = binary_search(ts1,ts2[st2],max(st1,0),len(ts1)-1)
+        i1=max(st1,i1)
+        i2 = binary_search(ts1,ts2[st2]+w,max(i1,0),len(ts1)-1)
+        i2=max(st1,i2)
+        eta+=(i2-i1)
+        st1 = max(st1,i2)
+        if st1<len(ts1)-1:
+            st2_pr=binary_search(ts2,ts1[st1+1],st2+1,len(ts2)-1)
+            st2=max(st2_pr,st2+1)
+    return eta
+
+
+def critical_events_v4(ts1,ts2,w):
+    if w>0:
+        return critical_events_v4_pos_w(ts1,ts2,w)
+    else:
+        ## TODO: Implement v3 version for negative w.
+        return critical_events_v2_neg_w(ts1,ts2,w)
+
+
 def functional_tst():
     ## Test cases.
-    ev = critical_events_v2([.5,1.5,2.5],[1,2,3],.5)
+    ev = critical_events_v2([.5,1.5,2.5],[1,2,3],.45)
     print(ev==0)
     ev = critical_events_v2([1.4,1.4,2.7],[1,2,3],.5)
     print(ev==2)
