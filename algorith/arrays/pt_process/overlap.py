@@ -142,7 +142,7 @@ def critical_events_v4(ts1,ts2,w):
     if w>0:
         return critical_events_v4_pos_w(ts1,ts2,w)
     else:
-        ## TODO: Implement v3 version for negative w.
+        ## TODO: Implement v4 version for negative w.
         return critical_events_v2_neg_w(ts1,ts2,w)
 
 
