@@ -5,6 +5,11 @@ from algorith.arrays.birth_death.down_instance import DownInstance
 
 
 def num_down(starts, ends):
+    """
+    Gets number of instances down in sequence given start and end times 
+    of down intervals in arrays. All other functions here are
+    mutations of this that address related tasks.
+    """
     heap = Heap()
     downs = []
     down = 0

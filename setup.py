@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
  
-setup(name='algorithms',
-      version='0.0.0',
+setup(name='algorith',
+      version='0.0.1',
       url='https://github.com/ryu577/algorithms',
       license='MIT',
       author='Rohit Pandey',
