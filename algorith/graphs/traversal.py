@@ -9,13 +9,15 @@ class Graph():
         self.edges = edges
 
 ## https://eddmann.com/posts/depth-first-search-and-breadth-first-search-in-python/
+def tst():
+    graph = {'A': set(['B', 'C']),
+            'B': set(['A', 'D', 'E']),
+            'C': set(['A', 'F']),
+            'D': set(['B']),
+            'E': set(['B', 'F']),
+            'F': set(['C', 'E'])}
+    dfs(graph, 'A') # {'E', 'D', 'F', 'A', 'C', 'B'}
 
-graph = {'A': set(['B', 'C']),
-         'B': set(['A', 'D', 'E']),
-         'C': set(['A', 'F']),
-         'D': set(['B']),
-         'E': set(['B', 'F']),
-         'F': set(['C', 'E'])}
 
 def dfs(graph, start):
     visited, stack = set(), [start]
@@ -26,7 +28,6 @@ def dfs(graph, start):
             stack.extend(graph[vertex] - visited)
     return visited
 
-dfs(graph, 'A') # {'E', 'D', 'F', 'A', 'C', 'B'}
 
 ## Recursive version of depth first search.
 def dfs_r(graph, start, visited=None):
