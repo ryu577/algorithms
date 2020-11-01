@@ -1,10 +1,5 @@
 import numpy as np
 
-
-
-
-
-
 ############################################
 class FailedAttempts():
     ##Failed attempts based on max water.

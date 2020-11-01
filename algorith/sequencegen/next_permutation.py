@@ -77,13 +77,11 @@ def next_permutation(arr):
                 return res_arr
 
 
-#def tst():
-arr = [1,2,4,3]
-num1=permutation_to_num(arr)
-num2=permutation_to_num_v2(arr)
-
-num=21
-a1=num_to_permutation(num,4)
-
-#a2=num_to_permutation_v2(num,4)
+def tst():
+    arr = [1,2,4,3]
+    num1=permutation_to_num(arr)
+    num2=permutation_to_num_v2(arr)
+    num=21
+    a1=num_to_permutation(num,4)
+    #a2=num_to_permutation_v2(num,4)
 
