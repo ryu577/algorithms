@@ -9,17 +9,18 @@ def polygon_paths(n=3,s=1,h=5):
         sum1+=omeg**(-j*(h+s))*(1+omeg**(2*j))**h
     return int(sum1.real/n)
 
-paths5 = [polygon_paths(n=5,h=h,s=2) for h in range(1,8)]
-paths6 = [polygon_paths(n=6,h=h,s=2) for h in range(1,8)]
-paths7 = [polygon_paths(n=7,h=h,s=2) for h in range(1,8)]
-paths8 = [polygon_paths(n=8,h=h,s=2) for h in range(1,8)]
+def tst():
+    paths5 = [polygon_paths(n=5,h=h,s=2) for h in range(1,8)]
+    paths6 = [polygon_paths(n=6,h=h,s=2) for h in range(1,8)]
+    paths7 = [polygon_paths(n=7,h=h,s=2) for h in range(1,8)]
+    paths8 = [polygon_paths(n=8,h=h,s=2) for h in range(1,8)]
 
-plt.plot(np.arange(1,8),paths5,label="5")
-plt.plot(np.arange(1,8),paths6,label="6")
-plt.plot(np.arange(1,8),paths7,label="7")
-plt.plot(np.arange(1,8),paths8,label="8")
+    plt.plot(np.arange(1,8),paths5,label="5")
+    plt.plot(np.arange(1,8),paths6,label="6")
+    plt.plot(np.arange(1,8),paths7,label="7")
+    plt.plot(np.arange(1,8),paths8,label="8")
 
-plt.legend()
-plt.show()
+    plt.legend()
+    plt.show()
 
 
