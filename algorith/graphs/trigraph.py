@@ -68,8 +68,8 @@ class NeuralTriGraph():
     def __init__(self, left_edges, right_edges):
         self.left_edges = left_edges
         self.right_edges = right_edges
-        self.vertices = set(edges1.flatten())\
-                    .union(set(edges2.flatten()))
+        self.vertices = set(left_edges.flatten())\
+                    .union(set(right_edges.flatten()))
         self.layer_1 = set(left_edges[:,0])
         self.layer_2 = set(left_edges[:,1])
         self.layer_3 = set(right_edges[:,1])
@@ -114,19 +114,47 @@ class NeuralTriGraph():
             v1 = "in_layer2_elem" + str(e)
             self.flow_graph.add_edge(v1,v2,capacity=1,weight=1)
 
-## Test case-1
-edges1 = np.array([[1,4],[2,4],[2,5],[3,5]])
-edges2 = np.array([[4,6],[4,7],[5,8]])
 
-nu = NeuralTriGraph(edges1,edges2)
-nu.create_bipartite_graph()
+def flow_to_paths(flow_dict):
+    paths = []; path=[]
+    seen_verts = set()
+    for k in flow_dict.keys():
+        if k.startswith("out_"):
+            [layer, vert_ind] = [int(st) for st in re.findall(r'\d+',k)]
+            if vert_ind not in seen_verts:                
+                curr_key = k
+                while len(flow_dict[curr_key])>0:
+                    [layer, vert_ind] = [int(st) for st in re.findall(r'\d+',curr_key)]
+                    if vert_ind not in seen_verts:
+                        seen_verts.add(vert_ind)
+                        if len(path)==0:
+                            path = [vert_ind]
+                        out_flow = 0
+                        for k1 in flow_dict[curr_key].keys():
+                            ## Qn: Why do we need the first if??
+                            if k1 in flow_dict[curr_key] and flow_dict[curr_key][k1]>0:
+                                out_flow+=1
+                                [nx_layer, nx_vert_ind] = [int(st) for st in re.findall(r'\d+',k1)]
+                                curr_key = "out_layer" + str(nx_layer) \
+                                    + "_elem" + str(nx_vert_ind)
+                                seen_verts.add(nx_vert_ind)
+                                path.append(nx_vert_ind)
+                paths.append([i for i in path])
+                path=[]
+    return paths
 
-##For debugging:
-[e for e in nu.flow_graph.edges]
 
-flow_val, flow_dict = nx.maximum_flow(nu.flow_graph, 'source', 'sink')
-
-## Test case-2
-edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
-edges2 = np.array([[5,8],[5,9],[5,10],[7,11],[6,11]])
+def tst1():
+    ## Test case-1
+    edges1 = np.array([[1,4],[2,4],[2,5],[3,5]])
+    edges2 = np.array([[4,6],[4,7],[5,8]])
+    nu = NeuralTriGraph(edges1,edges2)
+    nu.create_bipartite_graph()
+    ##For debugging:
+    [e for e in nu.flow_graph.edges]
+    flow_val, flow_dict = nx.maximum_flow(nu.flow_graph, 'source', 'sink')
+    paths = flow_to_paths(flow_dict)
+    ## Test case-2
+    edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
+    edges2 = np.array([[5,8],[5,9],[5,10],[7,11],[6,11]])
 
