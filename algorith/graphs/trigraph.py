@@ -2,6 +2,7 @@ import numpy as np
 import networkx as nx
 from networkx.algorithms.flow import maximum_flow
 import re
+import random
 
 
 class NeuralTriGraphCentralVert():
@@ -62,7 +63,7 @@ class NeuralTriGraph():
     graph. In it, the vertices can be segregated into three
     layers. However unlike a tri-partite graph, connections
     exist only between successive layers (1 and 2; 2 and 3).
-    Such graphs describe the layers of a neural network; 
+    Such graphs describe the layers of a neural network;
     hence the name.
     """
     def __init__(self, left_edges, right_edges):
@@ -73,6 +74,21 @@ class NeuralTriGraph():
         self.layer_1 = set(left_edges[:,0])
         self.layer_2 = set(left_edges[:,1])
         self.layer_3 = set(right_edges[:,1])
+        self.layer_1_size = len(self.layer_1)
+        self.layer_2_size = len(self.layer_2)
+        self.layer_3_size = len(self.layer_3)
+        self.layer_1_dict = {}
+        for e in left_edges:
+            if e[0] not in self.layer_1_dict:
+                self.layer_1_dict[e[0]] = set([e[1]])
+            else:
+                self.layer_1_dict[e[0]].add(e[1])
+        self.layer_3_dict = {}
+        for e in right_edges:
+            if e[1] not in self.layer_3_dict:
+                self.layer_3_dict[e[1]] = set([e[0]])
+            else:
+                self.layer_3_dict[e[1]].add(e[0])
         self.central_vert_dict = create_central_vert_dict(left_edges,\
                                                         right_edges)
 
@@ -113,20 +129,115 @@ class NeuralTriGraph():
         for e in self.layer_3:
             v1 = "in_layer2_elem" + str(e)
             self.flow_graph.add_edge(v1,v2,capacity=1,weight=1)
+        
+    def obtain_paths(self):
+        _, flow_dict = nx.maximum_flow(self.flow_graph, 'source', 'sink')
+        self.vert_disjoint_paths = max_matching_to_paths(flow_dict)
+        final_paths = []
+        for pth in self.vert_disjoint_paths:
+            if len(pth)==3:
+                final_paths.append(pth)
+            elif len(pth)==2:
+                left_layer = self.determine_layer(pth[0])
+                right_layer = self.determine_layer(pth[1])
+                if left_layer==0 and right_layer==2:
+                    central_candidates = self.layer_1_dict[pth[0]]\
+                                    .intersection(self.layer_3_dict[pth[1]])
+                    ## Randomly pick a central vertex.
+                    central = random.sample(central_candidates,1)[0]
+                    pth1 = [pth[0],central,pth[1]]
+                    final_paths.append(pth1)
+                elif left_layer==0:
+                    right_sampled = random.sample(self.central_vert_dict[pth[1]]\
+                            .r_edges,1)[0]
+                    pth1 = [pth[0],pth[1],right_sampled]
+                    final_paths.append(pth1)
+                elif right_layer==2:
+                    left_sampled = random.sample(self.central_vert_dict[pth[0]]\
+                            .l_edges,1)[0]
+                    pth1 = [left_sampled,pth[0],pth[1]]
+                    final_paths.append(pth1)
+        self.final_paths = final_paths
+
+    def determine_layer(self,ind):
+        if ind < self.layer_1_size:
+            return 0
+        elif ind < self.layer_2_size:
+            return 1
+        else:
+            return 2
 
 
-def tst():
+def max_matching_to_paths(flow_dict):
+    paths = []; path=[]
+    seen_verts = set()
+    for k in flow_dict.keys():
+        if k.startswith("out_"):
+            [_, vert_ind] = [int(st) for st in re.findall(r'\d+',k)]
+            if vert_ind not in seen_verts:                
+                path.append(vert_ind)
+                curr_vert = k
+                ## Embark on a walk along this path. 
+                ## Let's see how long it is.
+                #while len(flow_dict[curr_vert])>0:
+                while True:
+                    flow_out = 0
+                    for k1 in flow_dict[curr_vert].keys():
+                        if flow_dict[curr_vert][k1]>0:
+                            flow_out+=1
+                            [nx_layer, nx_vert_ind] = [int(st) for st in re.findall(r'\d+',k1)]
+                            curr_vert = "out_layer" + str(nx_layer) \
+                                    + "_elem" + str(nx_vert_ind)
+                            path.append(nx_vert_ind)
+                            seen_verts.add(nx_vert_ind)
+                            break
+                    if flow_out==0:
+                        break
+            if len(path)>0:
+                paths.append([i for i in path])
+                path = []
+    return paths
+
+
+def max_matching_to_paths_v1(flow_dict):
+    paths = []; path=[]
+    seen_verts = set()
+    for k in flow_dict.keys():
+        if k.startswith("out_"):
+            [layer, vert_ind] = [int(st) for st in re.findall(r'\d+',k)]
+            if vert_ind not in seen_verts:                
+                curr_key = k
+                while len(flow_dict[curr_key])>0:
+                    [layer, vert_ind] = [int(st) for st in re.findall(r'\d+',curr_key)]
+                    if vert_ind not in seen_verts:
+                        seen_verts.add(vert_ind)
+                        if len(path)==0:
+                            path = [vert_ind]
+                        for k1 in flow_dict[curr_key].keys():
+                            ## Qn: Why do we need the first if??
+                            if k1 in flow_dict[curr_key] and flow_dict[curr_key][k1]>0:
+                                [nx_layer, nx_vert_ind] = [int(st) for st in re.findall(r'\d+',k1)]
+                                curr_key = "out_layer" + str(nx_layer) \
+                                    + "_elem" + str(nx_vert_ind)
+                                seen_verts.add(nx_vert_ind)
+                                path.append(nx_vert_ind)
+                if len(path)>0:
+                    paths.append([i for i in path])
+                    path=[]
+    return paths
+
+
+def tst1():
     ## Test case-1
     edges1 = np.array([[1,4],[2,4],[2,5],[3,5]])
     edges2 = np.array([[4,6],[4,7],[5,8]])
-
     nu = NeuralTriGraph(edges1,edges2)
     nu.create_bipartite_graph()
-
     ##For debugging:
     [e for e in nu.flow_graph.edges]
-
     flow_val, flow_dict = nx.maximum_flow(nu.flow_graph, 'source', 'sink')
+    paths = max_matching_to_paths(flow_dict)
+
 
     ## Test case-2
     edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
