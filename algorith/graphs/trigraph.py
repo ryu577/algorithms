@@ -68,8 +68,8 @@ class NeuralTriGraph():
     def __init__(self, left_edges, right_edges):
         self.left_edges = left_edges
         self.right_edges = right_edges
-        self.vertices = set(edges1.flatten())\
-                    .union(set(edges2.flatten()))
+        self.vertices = set(left_edges.flatten())\
+                    .union(set(right_edges.flatten()))
         self.layer_1 = set(left_edges[:,0])
         self.layer_2 = set(left_edges[:,1])
         self.layer_3 = set(right_edges[:,1])
@@ -114,19 +114,21 @@ class NeuralTriGraph():
             v1 = "in_layer2_elem" + str(e)
             self.flow_graph.add_edge(v1,v2,capacity=1,weight=1)
 
-## Test case-1
-edges1 = np.array([[1,4],[2,4],[2,5],[3,5]])
-edges2 = np.array([[4,6],[4,7],[5,8]])
 
-nu = NeuralTriGraph(edges1,edges2)
-nu.create_bipartite_graph()
+def tst():
+    ## Test case-1
+    edges1 = np.array([[1,4],[2,4],[2,5],[3,5]])
+    edges2 = np.array([[4,6],[4,7],[5,8]])
 
-##For debugging:
-[e for e in nu.flow_graph.edges]
+    nu = NeuralTriGraph(edges1,edges2)
+    nu.create_bipartite_graph()
 
-flow_val, flow_dict = nx.maximum_flow(nu.flow_graph, 'source', 'sink')
+    ##For debugging:
+    [e for e in nu.flow_graph.edges]
 
-## Test case-2
-edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
-edges2 = np.array([[5,8],[5,9],[5,10],[7,11],[6,11]])
+    flow_val, flow_dict = nx.maximum_flow(nu.flow_graph, 'source', 'sink')
+
+    ## Test case-2
+    edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
+    edges2 = np.array([[5,8],[5,9],[5,10],[7,11],[6,11]])
 
