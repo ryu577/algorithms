@@ -22,7 +22,8 @@ def print_paths(n,start,end,arr):
     # We can never let the sum of the x and y-coordinates
     # exceed 2n. This ensures we stay within the square boundary
     # of the grid. We can never cross the line x=y by design.
-    # the condition ensure we also never cross x+y=2n, the other boundary.
+    # the condition ensure we also never cross 
+    # x+y=2n, the other boundary.
     elif sum(start)==2*n:
         # Since we're at the peak, must move down.
         arr.append(')')
@@ -35,7 +36,7 @@ def print_paths(n,start,end,arr):
         arr.append('(')
         start+=np.array([1,1])
         print_paths(n,start,end,arr)
-    ## In the regular scenario, move up and also move down.
+    ## If within all boundaries, move up and also move down.
     else:
         arr_up = arr.copy()
         arr_down=arr.copy()
