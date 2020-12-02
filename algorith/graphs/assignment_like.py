@@ -3,7 +3,6 @@ import networkx as nx
 from networkx.algorithms.flow import maximum_flow
 from algorith.graphs.trigraph import NeuralTriGraphCentralVert
 
-
 def create_bipartite_graph(edges,l_caps,r_caps):
     n_edges = np.max(edges)
     g = nx.DiGraph()
@@ -85,7 +84,8 @@ def min_cover_trigraph(edges1,edges2):
         vert_set[key].edge_counts()
     return vert_set
 
-
+##########################################
+## Test cases
 def tst4():
     edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
     edges2 = np.array([[5,8],[5,9],[5,10],[7,11],[6,11]])

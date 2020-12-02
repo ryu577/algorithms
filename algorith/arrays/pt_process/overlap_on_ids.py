@@ -7,6 +7,7 @@ import pandas as pd
 def critical_events_per_object_v2(ts1_df,ts2_df,w):
     """
     Slow as pig even for intermediate w.
+    This is deprecated. Use methods in overlap.py
     """
     ts1_df=ts1_df.sort_values(by=['RelativeTime'])
     ts2_df=ts2_df.sort_values(by=['RelativeTime'])

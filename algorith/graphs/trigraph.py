@@ -238,7 +238,6 @@ def tst1():
     flow_val, flow_dict = nx.maximum_flow(nu.flow_graph, 'source', 'sink')
     paths = max_matching_to_paths(flow_dict)
 
-
     ## Test case-2
     edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
     edges2 = np.array([[5,8],[5,9],[5,10],[7,11],[6,11]])
