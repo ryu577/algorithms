@@ -134,3 +134,6 @@ def tst_median(n_e):
     mm1 = two_median(a1,a2)
     print(mm1)
     print(mm)
+
+if __name__=="__main__":
+    tst_median(1001)
