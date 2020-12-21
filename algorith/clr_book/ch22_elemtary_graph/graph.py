@@ -1,6 +1,7 @@
 from collections import defaultdict
 import numpy as np
 
+
 class Graph():
     def __init__(self,vertices=None):
         ##We'll assume for now a staggered array.
