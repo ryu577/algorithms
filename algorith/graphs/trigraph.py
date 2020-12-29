@@ -1,8 +1,31 @@
 import numpy as np
 import networkx as nx
 from networkx.algorithms.flow import maximum_flow
+from algorith.graphs.graph_utils import min_edge_cover
 import re
 import random
+import collections
+
+
+def min_cover_trigraph_edge_covers_heuristic(edges1,edges2):
+    c1=min_edge_cover(edges1)
+    c2=min_edge_cover(edges2)
+    vert_set = {}
+    for e in c1:
+        if e[1] not in vert_set:
+            tg = NeuralTriGraphCentralVert(e)
+            vert_set[e[1]] = tg
+        else:
+            vert_set[e[1]].add(e)
+    for e in c2:
+        if e[0] not in vert_set:
+            tg = NeuralTriGraphCentralVert(e)
+            vert_set[e[0]] = tg
+        else:
+            vert_set[e[0]].add(e)
+    for key in vert_set:
+        vert_set[key].edge_counts()
+    return vert_set
 
 
 class NeuralTriGraphCentralVert():
@@ -28,33 +51,6 @@ class NeuralTriGraphCentralVert():
             self.r_counts = distr_evenly(l_size,r_size)
         elif l_size<r_size:
             self.l_counts = distr_evenly(r_size,l_size)
-
-
-def distr_evenly(n,l):
-    ceil=np.ceil(n/l)
-    flr=ceil-1
-    h=int(n-l*flr)
-    j=int(l*ceil-n)
-    h_arr = np.ones(h)*ceil
-    j_arr = np.ones(j)*flr
-    return np.concatenate((h_arr,j_arr))
-
-
-def create_central_vert_dict(edges1,edges2):
-    vert_set = {}
-    for e in edges1:
-        if e[1] not in vert_set:
-            tg = NeuralTriGraphCentralVert(e)
-            vert_set[e[1]] = tg
-        else:
-            vert_set[e[1]].add(e)
-    for e in edges2:
-        if e[0] not in vert_set:
-            tg = NeuralTriGraphCentralVert(e)
-            vert_set[e[0]] = tg
-        else:
-            vert_set[e[0]].add(e)
-    return vert_set
 
 
 class NeuralTriGraph():
@@ -129,7 +125,7 @@ class NeuralTriGraph():
         for e in self.layer_3:
             v1 = "in_layer2_elem" + str(e)
             self.flow_graph.add_edge(v1,v2,capacity=1,weight=1)
-        
+    
     def obtain_paths(self):
         _, flow_dict = nx.maximum_flow(self.flow_graph, 'source', 'sink')
         self.vert_disjoint_paths = max_matching_to_paths(flow_dict)
@@ -167,11 +163,40 @@ class NeuralTriGraph():
         else:
             return 2
 
+def distr_evenly(n,l):
+    ceil=np.ceil(n/l)
+    flr=ceil-1
+    h=int(n-l*flr)
+    j=int(l*ceil-n)
+    h_arr = np.ones(h)*ceil
+    j_arr = np.ones(j)*flr
+    return np.concatenate((h_arr,j_arr))
+
+
+def create_central_vert_dict(edges1,edges2):
+    vert_set = {}
+    for e in edges1:
+        if e[1] not in vert_set:
+            tg = NeuralTriGraphCentralVert(e)
+            vert_set[e[1]] = tg
+        else:
+            vert_set[e[1]].add(e)
+    for e in edges2:
+        if e[0] not in vert_set:
+            tg = NeuralTriGraphCentralVert(e)
+            vert_set[e[0]] = tg
+        else:
+            vert_set[e[0]].add(e)
+    return vert_set
+
 
 def max_matching_to_paths(flow_dict):
     paths = []; path=[]
     seen_verts = set()
-    for k in flow_dict.keys():
+    # Prioritize earlier layers to avoid starting larger paths from the middle,
+    # which will incorrectly split them into multiple paths.
+    for k in sorted(flow_dict.keys()):
+        # What if there is a path that doesn't start at layer0?
         if k.startswith("out_"):
             [_, vert_ind] = [int(st) for st in re.findall(r'\d+',k)]
             if vert_ind not in seen_verts:                
@@ -202,13 +227,13 @@ def max_matching_to_paths(flow_dict):
 def max_matching_to_paths_v1(flow_dict):
     paths = []; path=[]
     seen_verts = set()
-    for k in flow_dict.keys():
-        if k.startswith("out_"):
-            [layer, vert_ind] = [int(st) for st in re.findall(r'\d+',k)]
+    for k in sorted(flow_dict.keys()):
+        if k.startswith("out_") and "layer0" in k:
+            [_, vert_ind] = [int(st) for st in re.findall(r'\d+',k)]
             if vert_ind not in seen_verts:                
                 curr_key = k
                 while len(flow_dict[curr_key])>0:
-                    [layer, vert_ind] = [int(st) for st in re.findall(r'\d+',curr_key)]
+                    [_, vert_ind] = [int(st) for st in re.findall(r'\d+',curr_key)]
                     if vert_ind not in seen_verts:
                         seen_verts.add(vert_ind)
                         if len(path)==0:
