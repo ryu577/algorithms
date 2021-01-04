@@ -27,22 +27,22 @@ def coin_change_v2(c,u):
     return q+1
 
 def memoised_coin_chg(c,u):
-    r=np.ones(u+1)*np.inf
+    r=np.ones(u+1)* -1 # change 1
     r[0]=0
     return memoised_coin_chg_aux(c,u,r)
 
+## See: https://stackoverflow.com/questions/65282750/coin-change-problem-top-down-approach-seems-to-not-be-polynomial/65491403#65491403
 def memoised_coin_chg_aux(c,u,r):
-    if r[u]<np.inf:
-        return r[u]
-    if u==0:
-        q=0
-    else:
-        q=np.inf
-        for i in range(len(c)):
-            if u >= c[i]:
-                q=min(q,memoised_coin_chg_aux(c,u-c[i],r))
-    r[u]=q+1
-    return q+1
+  if r[u] != -1: # change 2
+      return r[u]
+  # removed u = 0 check because r[0] is already initialized to 0
+  q=np.inf
+  for i in range(len(c)):
+      if u >= c[i]:
+          q=min(q,memoised_coin_chg_aux(c,u-c[i],r))
+  r[u]=q+1
+  return q+1
+
 
 def bottom_up_coin_chg(c,u):
     r=np.ones(u+1)*np.inf; r[0]=0
@@ -112,4 +112,6 @@ if __name__=="__main__":
     tst2()
     print("##Now the bottom-up version##")
     tst4()
+    print("##Now the top-down version##")
+    tst3()
 

@@ -1,7 +1,9 @@
 import numpy as np
 import networkx as nx
 from networkx.algorithms.flow import maximum_flow
-from algorith.graphs.trigraph import NeuralTriGraphCentralVert
+from algorith.graphs.trigraph import NeuralTriGraphCentralVert, min_cover_trigraph_edge_covers_heuristic
+from algorith.graphs.graph_utils import create_graph
+
 
 def create_bipartite_graph(edges,l_caps,r_caps):
     n_edges = np.max(edges)
@@ -13,13 +15,6 @@ def create_bipartite_graph(edges,l_caps,r_caps):
     for i in edges:
         g.add_edge(i[0],i[1],capacity=np.inf,weight=1)
     g.add_edges_from(edges)
-    return g
-
-
-def create_graph(edges):
-    g = nx.Graph()
-    for i in edges:
-        g.add_edge(i[0],i[1],capacity=np.inf,weight=1)
     return g
 
 
@@ -55,41 +50,12 @@ def make_f_flow(edges,l_caps,r_caps,f):
     return flow_dict
 
 
-def min_cover(edges):
-    g=create_graph(edges)
-    mc = nx.min_edge_cover(g)
-    res = set()
-    for i in mc:
-        res.add((min(i),max(i)))
-    return res
-
-
-def min_cover_trigraph(edges1,edges2):
-    c1=min_cover(edges1)
-    c2=min_cover(edges2)
-    vert_set = {}
-    for e in c1:
-        if e[1] not in vert_set:
-            tg = NeuralTriGraphCentralVert(e)
-            vert_set[e[1]] = tg
-        else:
-            vert_set[e[1]].add(e)
-    for e in c2:
-        if e[0] not in vert_set:
-            tg = NeuralTriGraphCentralVert(e)
-            vert_set[e[0]] = tg
-        else:
-            vert_set[e[0]].add(e)
-    for key in vert_set:
-        vert_set[key].edge_counts()
-    return vert_set
-
 ##########################################
 ## Test cases
 def tst4():
     edges1 = np.array([[1,5],[2,5],[3,7],[4,6]])
     edges2 = np.array([[5,8],[5,9],[5,10],[7,11],[6,11]])
-    min_cover_trigraph(edges1, edges2)
+    min_cover_trigraph_edge_covers_heuristic(edges1, edges2)
 
 
 def tst2():

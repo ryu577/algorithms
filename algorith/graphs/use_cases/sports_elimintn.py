@@ -19,6 +19,8 @@ class BaseballElim():
         [4,4,4,0,0],
         [3,4,0,0,0]
     ])
+    
+    @staticmethod
     def graph_optimizn():
         w5,l5,w,l,r,to_play=BaseballElim.w5,BaseballElim.l5,\
                     BaseballElim.w,BaseballElim.l,BaseballElim.r,\
@@ -52,6 +54,7 @@ class BaseballElim():
         detroit_eliminated = sum(sum(to_play[:4,:4]))/2-flow_value
 
     ######
+    @staticmethod
     def detroit_eliminated_v2():
         w5,l5,w,l,r,to_play=BaseballElim.w5,BaseballElim.l5,\
                     BaseballElim.w,BaseballElim.l,BaseballElim.r,\

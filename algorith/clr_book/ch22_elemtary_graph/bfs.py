@@ -23,6 +23,7 @@ def tst():
     g=Graph().init_from_edge_list(num_verts,edges)
     bfs_minimal(g,g.vertices[0])
 
+
 if __name__=="__main__":
     tst()
 

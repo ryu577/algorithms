@@ -18,7 +18,7 @@ def find_pivot(a,lo,hi):
                 hi=mid
             else:
                 lo=mid+1
-        return lo-1
+        return lo
 
 def find_pivot2(a,lo,hi):
     if (a[hi]>a[lo]):
@@ -30,7 +30,7 @@ def find_pivot2(a,lo,hi):
                 hi=mid-1
             else:
                 lo=mid
-        return lo-1
+        return hi
 
 def map_sorted_to_rotated(x,pv,a):
     n=len(a)
@@ -61,6 +61,10 @@ if __name__=="__main__":
     ix = binary_srch(nums,0,0,len(nums)-1)
     print(ix)
     nums=[2,2,2,0,2,2]
+    pv1=find_pivot(nums,0,len(nums)-1)
+    pv2=find_pivot2(nums,0,len(nums)-1)
+    print(str(pv1)+","+str(pv2))
+    nums=[4,5,6,7,0,1,2]
     pv1=find_pivot(nums,0,len(nums)-1)
     pv2=find_pivot2(nums,0,len(nums)-1)
     print(str(pv1)+","+str(pv2))
