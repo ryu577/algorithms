@@ -98,3 +98,4 @@ if __name__=="__main__":
     res, s = opt_mult_top_dwn_strt_v2(a)
     print(s)
     print_opt_parenth(s,0,len(a)-1)
+

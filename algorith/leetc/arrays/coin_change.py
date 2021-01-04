@@ -52,7 +52,7 @@ def bottom_up_coin_chg(c,u):
             if j>=c[i]:
                 q=min(q,r[j-c[i]])
         r[j]=q+1
-    return r[u]
+    return r[u]z
 
 
 def tst():
