@@ -36,4 +36,32 @@ class QuickSort():
     def __init__(self,a):
         self.arr=a
 
+    @staticmethod
+    def partition(a,p,r):
+        x=a[r]
+        i = p-1
+        for j in range(p,r):
+            if a[j]<=x:
+                i+=1
+                QuickSort.swap(a,i,j)
+        QuickSort.swap(a,i+1,r)
+        return i+1
+
+    @staticmethod
+    def sort(a,p,r):
+        if p<r:
+            q = QuickSort.partition(a,p,r)
+            QuickSort.sort(a,p,q-1)
+            QuickSort.sort(a,q+1,r)
+
+    @staticmethod
+    def swap(a,i,j):
+        tmp=a[i]
+        a[i]=a[j]
+        a[j]=tmp
+
+if __name__=="__main__":
+    a=[6,5,4,3,2,1]
+    QuickSort.sort(a,0,len(a)-1)
+    print(a)
 
