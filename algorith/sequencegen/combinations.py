@@ -15,8 +15,6 @@ def comb(n,k,arr=[]):
         comb(n,k,arr)
     arr=[]
 
-comb(4,2)
-
 
 #############
 ## Geeksforgeeks solution.
