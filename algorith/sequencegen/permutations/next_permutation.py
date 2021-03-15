@@ -50,6 +50,7 @@ def permutation_to_num_v2(arr):
     return int(res)
 
 def num_to_permutation_v2(a,n):
+    ## This is wrong. Have to use process of elimination.
     res = []
     fac = factorial(n)
     tn=tr.TreeNode(a//(fac/n),None,None); more_than=0
@@ -81,7 +82,10 @@ def tst():
     arr = [1,2,4,3]
     num1=permutation_to_num(arr)
     num2=permutation_to_num_v2(arr)
+    print(num2)
     num=21
     a1=num_to_permutation(num,4)
     #a2=num_to_permutation_v2(num,4)
 
+if __name__=="__main__":
+    tst()

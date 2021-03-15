@@ -1,54 +1,54 @@
-import numpy as np
-import uuid
-
-class TreeNode():
-    def __init__(self,val,left,right,\
-                parent=None,key=None,
-                left_size=0):
-        self.val=val
-        self.left=left
-        self.right=right
-        self.parent=parent
-        ##WARNING: Don't trust this if you delete from the tree.
-        self.left_size=left_size
+class TreeNode(object):
+    def __init__(self, val, left, right,
+                 parent=None, key=None,
+                 left_size=0):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.parent = parent
+        # WARNING: Don't trust this if you delete from the tree.
+        self.left_size = left_size
         if key is None:
-            self.key=val
+            self.key = val
 
-    def __gt__(self,node2):
-        return self.key>node2.key
-    
-    def __eq__(self,node2):
-        return self.key==node2.key
-    
-    def __lt__(self,node2):
-        return self.key<node2.key
+    def __gt__(self, node2):
+        return self.key > node2.key
+
+    def __eq__(self, node2):
+        return self.key == node2.key
+
+    def __lt__(self, node2):
+        return self.key < node2.key
+
 
 class Tree():
-    def __init__(self,root):
-        self.root=root
+    def __init__(self, root):
+        self.root = root
 
-    def insert(self,z):
-        y=None
-        x=self.root
-        num_less=0
+    def insert(self, z):
+        y = None
+        x = self.root
+        num_less = 0
         while x is not None:
-            y=x
-            if z.key<x.key:
-                x.left_size+=1
-                x=x.left
+            y = x
+            if z.key < x.key:
+                x.left_size += 1
+                x = x.left
             else:
-                num_less+=x.left_size+1
-                x=x.right                             
-        z.parent=y
+                num_less += x.left_size + 1
+                x = x.right
+        z.parent = y
         if y is None:
-            self.root=z #Tree was empty
-        elif z.key<y.key:
-            y.left=z
-        else: y.right=z
-        ##WARNING: Don't trust this if you delete from the tree.
+            self.root = z
+            # Tree was empty
+        elif z.key < y.key:
+            y.left = z
+        else:
+            y.right = z
+        # WARNING: Don't trust this if you delete from the tree.
         return num_less
 
-    def transplant(self,u,v):
+    def transplant(self, u, v):
         """
         Does not update v.left or v.right.
         Doing so is the caller's responsibility.
@@ -64,13 +64,13 @@ class Tree():
 
     def delete(self,z):
         if z.left is None:
-            self.transplant(z,z.right)
+            self.transplant(z, z.right)
         elif z.right is None:
-            self.transplant(z,z.left)
-        else: 
+            self.transplant(z, z.left)
+        else:
             y=tree_min(z.right)
             if y.parent != z:##See fig 12.4 (d)
-                self.transplant(y,y.right)
+                self.transplant(y, y.right)
                 y.right=z.right
                 y.right.parent=y
             self.transplant(z,y)
@@ -81,24 +81,26 @@ class Tree():
 def walk_inorder(x):
     if x is not None:
         walk_inorder(x.left)
-        print(x.val,end=",")
+        print(x.val, end=",")
         walk_inorder(x.right)
+
 
 def walk_preorder(x):
     if x is not None:
-        print(x.val,end=",")
+        print(x.val, end=",")
         walk_inorder(x.left)
         walk_inorder(x.right)
+
 
 def walk_postoder(x):
     if x is not None:
         walk_inorder(x.left)
         walk_inorder(x.right)
-        print(x.val,end=",")
+        print(x.val, end=",")
 
 
-def tree_search(x,k):
-    if x is None or k==x.key:
+def tree_search(x, k):
+    if x is None or k == x.key:
         return x
     if k<x.key:
         return tree_search(x.left,k)

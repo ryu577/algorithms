@@ -1,8 +1,9 @@
 import numpy as np
 
-## Whiteboard: https://wbd.ms/share/v2/aHR0cHM6Ly93aGl0ZWJvYXJkLm1pY3Jvc29mdC5jb20vYXBpL3YxLjAvd2hpdGVib2FyZHMvcmVkZWVtLzk4ZjBjYzM3OTc1MzQ3YjY5ZTQ4OTA3MjYxODIxN2Y0X0JCQTcxNzYyLTEyRTAtNDJFMS1CMzI0LTVCMTMxRjQyNEUzRA==
+# Whiteboard: https://wbd.ms/share/v2/aHR0cHM6Ly93aGl0ZWJvYXJkLm1pY3Jvc29mdC5jb20vYXBpL3YxLjAvd2hpdGVib2FyZHMvcmVkZWVtLzk4ZjBjYzM3OTc1MzQ3YjY5ZTQ4OTA3MjYxODIxN2Y0X0JCQTcxNzYyLTEyRTAtNDJFMS1CMzI0LTVCMTMxRjQyNEUzRA==
 
-def print_paths(n,start,end,arr):
+
+def print_paths(n, start, end, arr):
     """
     We leverage the bijection between Catalan paths
     and valid parenthesizations. start and end are the
@@ -11,7 +12,7 @@ def print_paths(n,start,end,arr):
     Note that end never changes, so passing it to the function
     is redundant. Also, n never changes.
     """
-    ## one less on the x-coordiate and one more on
+    # one less on the x-coordiate and one more on
     # the y-coordinate, means we're one step away
     # from end point. We could also check for start[1]-end[1]==1
     # but the abs makes it not specific to paths above the grid

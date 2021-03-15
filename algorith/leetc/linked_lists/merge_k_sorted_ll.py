@@ -9,9 +9,9 @@ class ListNode:
     def print_lst_s(n):
         while n.next is not None:
             print(n.val)
-            n=n.next
+            n = n.next
         print(n.val)
-    
+
     def print_lst(self):
         ListNode.print_lst_s(self)
 

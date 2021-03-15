@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from algorith.heap.heap import Heap
+from algorith.data_structs.heap.heap import Heap
 from algorith.arrays.birth_death.down_instance import DownInstance
 
 
@@ -14,17 +14,17 @@ def num_down(starts, ends):
     downs = []
     down = 0
     for i in range(len(starts)):
-        while heap.size>0 and starts[i] > heap.peek():
+        while heap.size > 0 and starts[i] > heap.peek():
             heap.pop()
-            down-=1
+            down -= 1
             downs.append(down)
         heap.push(ends[i])
-        down+=1
+        down += 1
         downs.append(down)
-    ##In the end, the heap should have only one element left.
+    # In the end, the heap should have only one element left.
     while heap.size > 1:
         heap.pop()
-        down-=1
+        down -= 1
         downs.append(down)
     return downs
 
