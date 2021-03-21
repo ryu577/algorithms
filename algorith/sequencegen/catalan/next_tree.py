@@ -12,19 +12,16 @@ def ix_to_tree(ix, n):
     path = ix_to_path(ix, n, n+1)
     # The last entry is a redundant tail. So, remove it.
     tree_nd = print_tree(path[:len(path)-1])
-    return tree_nd
+    return tree_nd, path
 
 
 def print_all_trees(n=3):
     n_trees = n_catalan2(n, n+1)
-    trees = []
     for ix in range(n_trees):
-        tn = ix_to_tree(ix, n)
+        tn, path = ix_to_tree(ix, n)
         print("---n="+str(ix)+"---")
         tn.display()
-        tr = Tr1(tn)
-        trees.append(tr.arr)
-    return trees
+        print(path)
 
 
 class Tr1():

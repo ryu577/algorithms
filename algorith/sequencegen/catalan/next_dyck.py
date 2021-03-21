@@ -25,22 +25,20 @@ def n_catalan2(h, t):
     else:
         return abs(ncr(h+t-1, t) - ncr(h+t-1, t-1))
 
-
-def path_to_ix(path, k, t):
+def path_to_ix(path):
     """
     path is an array of positions where we got heads.
-    TODO: Needs to be fixed. Currently produces wrong
-    results for t=4, h=3.
+    See remarkable/math/math/p50
     """
-    total_tosses = (k+2*t)
-    total_heads = len(path)
+    h = int(sum(path))
+    t = len(path) - h
     ix = 0
     for i in range(len(path)):
-        tosses_left = total_tosses-path[i]
-        heads_left = total_heads-i
-        tails_left = tosses_left-heads_left
-        k = heads_left-tails_left
-        ix += n_catalan(k+1, tails_left-1)
+        if path[i] == 1:
+            ix += n_catalan2(h, t-1)
+            h -= 1
+        else:
+            t -= 1
     return ix
 
 
@@ -70,8 +68,9 @@ def ix_to_path(ix, h, t):
 if __name__ == "__main__":
     path = ix_to_path(3, 3, 4)
     print(path)
-    ix = path_to_ix([3, 4, 5, 6, 7], 2, 3)
+    ix = path_to_ix([1, 0, 1, 0, 1, 0, 0])
     print(ix)
-    ix = path_to_ix([1, 4, 5, 6, 7], 2, 3)
+    ix = path_to_ix([1, 0, 1, 1, 0, 0, 0])
     print(ix)
-    ix = path_to_ix([1, 3, 5, 6, 7], 2, 3)
+    ix = path_to_ix([1, 1, 0, 0, 1, 0, 0])
+    print(ix)

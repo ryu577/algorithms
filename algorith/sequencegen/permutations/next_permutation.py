@@ -14,6 +14,7 @@ def permutation_to_num(arr):
         so_far.append(arr[i])
     return int(res)
 
+
 def num_to_permutation(a,n):
     res = []
     so_far = [i for i in range(n)]
@@ -28,12 +29,13 @@ def num_to_permutation(a,n):
     return res
 
 
-def more_than_so_far(so_far,a):
+def more_than_so_far(so_far, a):
     cumulative=0
     for i in so_far:
         if i<=a:
             cumulative+=1
     return cumulative
+
 
 def permutation_to_num_v2(arr):
     n=len(arr)
@@ -48,6 +50,7 @@ def permutation_to_num_v2(arr):
         fac/=n-i
         res+=(arr[i]-1-more_than)*fac
     return int(res)
+
 
 def num_to_permutation_v2(a,n):
     ## This is wrong. Have to use process of elimination.
@@ -64,6 +67,7 @@ def num_to_permutation_v2(a,n):
         res.append(int(tmp+1+more_than))
         a=a%fac
     return res
+
 
 def next_permutation(arr):
     arr2=np.arange(len(arr))+1
@@ -86,6 +90,7 @@ def tst():
     num=21
     a1=num_to_permutation(num,4)
     #a2=num_to_permutation_v2(num,4)
+
 
 if __name__=="__main__":
     tst()
