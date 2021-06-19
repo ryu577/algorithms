@@ -11,6 +11,12 @@ from typing import List
 #         self.left = left
 #         self.right = right
 
+class TreeNode:
+    def __init__(self, key):
+        self.key = int(key)
+        self.val = int(key)
+        self.right = None
+        self.left = None
 
 class Solution:
     def generateTrees(self, n: int) -> List[TreeNode]:
@@ -147,14 +153,6 @@ def find_tar(path, targ, start):
     while path[i] != targ:
         i += 1
     return i
-
-
-class TreeNode:
-    def __init__(self, key):
-        self.key = int(key)
-        self.val = int(key)
-        self.right = None
-        self.left = None
 
 
 if __name__=="__main__":
