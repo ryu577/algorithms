@@ -3,6 +3,7 @@ import numpy as np
 import operator as op
 from functools import reduce
 from typing import List
+from algorith.leetc.trees.tree_node import TreeNode
 
 # Definition for a binary tree node.
 # class TreeNode:
@@ -115,7 +116,6 @@ def print_all_trees(n=3):
     trees = []
     for ix in range(n_trees):
         tn = ix_to_tree(ix, n)
-        tr = Tr1(tn)
         trees.append(tn)
     return trees
 
@@ -149,15 +149,6 @@ def find_tar(path, targ, start):
     return i
 
 
-class TreeNode:
-    def __init__(self, key):
-        self.key = int(key)
-        self.val = int(key)
-        self.right = None
-        self.left = None
-
-
-if __name__=="__main__":
+if __name__ == "__main__":
     sol = Solution()
     sol.generateTrees(3)
-
