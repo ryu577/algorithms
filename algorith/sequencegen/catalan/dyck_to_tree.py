@@ -10,12 +10,12 @@ def get_tree(path, start, end):
     root = BstNode((x-start)/2)
     root.left = get_tree(path, start+1, x-1)
     root.right = get_tree(path, x, end)
-    # Fix the labels of the keys.
     return root
 
 
 def get_tree2(path):
     root = get_tree(path, 0, len(path)-1)
+    # Fix the labels of the keys.
     Tr(root)
     return root
 
