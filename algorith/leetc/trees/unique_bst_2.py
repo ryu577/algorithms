@@ -3,14 +3,15 @@ import numpy as np
 import operator as op
 from functools import reduce
 from typing import List
-from algorith.leetc.trees.tree_node import TreeNode
+
 
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
+class TreeNode1:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
 
 class TreeNode:
     def __init__(self, key):
@@ -18,6 +19,7 @@ class TreeNode:
         self.val = int(key)
         self.right = None
         self.left = None
+
 
 class Solution:
     def generateTrees(self, n: int) -> List[TreeNode]:
