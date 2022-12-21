@@ -5,6 +5,7 @@ from algorith.leetc.trees.utils import arr_2_tree
 # Solutions taken from: 
 # https://leetcode.com/problems/symmetric-tree/solutions/33050/Recursively-and-iteratively-solution-in-Python/
 
+
 class Solution1:
     def isSymmetric(self, root):
         if not root:
